@@ -13,7 +13,7 @@
 #include "client/simpletun.h"
 
 
-const char *SERVER_ADDR = "100.100.144.155";  // mb std::string
+const char *SERVER_ADDR = "194.67.201.7";  // mb std::string
 const int SERVER_PORT = 12345;
 const int BUFF_SIZE = 4* 1024;
 const char *tun_name = "vpn_tun";
@@ -21,7 +21,7 @@ int sock_fd;
 int tap_fd;
 
 void create_tun(const std::string &vip) {
-    std::string syscall = "./scripts/tun.sh ";
+    std::string syscall = "bash scripts/tun.sh ";
     syscall += tun_name;
     syscall += " ";
     syscall += vip;
@@ -29,7 +29,7 @@ void create_tun(const std::string &vip) {
 }
 
 void delete_tun() {
-    std::string syscall = "./scripts/tun_del.sh ";
+    std::string syscall = "bash scripts/tun_del.sh ";
     syscall += tun_name;
     system(syscall.c_str());
 }
