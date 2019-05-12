@@ -1,5 +1,5 @@
 #include <iostream>
-#include "rwr.h"
+#include "../include/rwr.h"
 
 int cread(int fd, char *buf, int n){
 

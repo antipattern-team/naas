@@ -1,3 +1,12 @@
+
+
+/*ТОХИН КЛИЕНТИЩЕЕЕЕЕе*/
+
+/*WILL BE DELETED*/
+
+
+
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -10,7 +19,7 @@
 #include <csignal>
 #include <sys/stat.h>
 
-#include "client/simpletun.h"
+#include "Client/include/simpletun.h"
 
 
 const char *SERVER_ADDR = "194.67.201.7";  // mb std::string
