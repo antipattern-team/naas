@@ -23,7 +23,7 @@
 namespace connectors {
 
     class Connector {
-    protected:
+    public:
         virtual int connectFunc(const char *SERVER_ADDR,  uint16_t SERVER_PORT) = 0;
 
         virtual int disconnectFunc() = 0;
@@ -38,17 +38,13 @@ namespace connectors {
     class Controller { //паттерн стратегия
     public:
 
-        Controller(Connector* conn) : connector(conn) {}
+        explicit Controller(Connector* conn) : connector(conn) {}
         ~Controller() {delete connector;}
 
-        void connectAll();
+        void connectAll(const char *SERVER_ADDR,  uint16_t SERVER_PORT);
 
         void disconnectAll();
 
-
-        int getAuthConnector();
-        // getConfigConnector();
-        int getConnectConnector();
 
     private:
         Connector* connector;

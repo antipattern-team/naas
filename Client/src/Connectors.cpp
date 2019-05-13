@@ -144,22 +144,17 @@ int connectors::ConnectConnector::connectToNet(std::string connectTo)
 
 
 
-void connectors::Controller::connectAll()
+//называется коннект алл, а по сути коннектит только одно :DDDDDDDD
+void connectors::Controller::connectAll(const char *SERVER_ADDR,  uint16_t SERVER_PORT)
 {
-    //ZA_LUPU
+    connector->connectFunc(SERVER_ADDR, SERVER_PORT);
 }
 
 void connectors::Controller::disconnectAll()
 {
-    //ZA_PUPU
+    connector->disconnectFunc();
 }
 
-int connectors::Controller::getAuthConnector()
-{
-    return 0;//ZA_NET
-}
 
-int connectors::Controller::getConnectConnector()
-{
-    return 0;//ZA_MAT'
-}
+
+
