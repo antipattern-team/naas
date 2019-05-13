@@ -10,11 +10,11 @@
 #include <iostream>
 #include <cstring>
 #include <unistd.h>
-#include <map>
 #include <sstream>
 #include <thread>
 #include <csignal>
 #include <sys/stat.h>
+#include <vector>
 
 
 #include "Config.h"
@@ -22,11 +22,12 @@
 
 namespace connectors {
 
-
     class Connector {
     protected:
-        virtual int connectFunc(const char* SERVER_ADDR,const int SERVER_PORT) = 0;
+        virtual int connectFunc(const char *SERVER_ADDR, const int SERVER_PORT) = 0;
+
         virtual int disconnectFunc() = 0;
+
         const std::string disconnectRequest = "Kill";
 
     public:
@@ -34,30 +35,35 @@ namespace connectors {
     };
 
 
-    class Controller {
+    class Controller { //паттерн стратегия
     public:
-    Controller(config::Config config);
 
-    bool connectAll();
-    bool disconnectAll();
+        Controller(Connector* conn) : connector(conn) {}
+        ~Controller() {delete connector;}
+
+        bool connectAll();
+
+        bool disconnectAll();
 
 
-    virtual bool getAuthConnector();
-    //virtual bool getConfigConnector();
-    virtual int getConnectConnector();
+        int getAuthConnector();
+        // getConfigConnector();
+        int getConnectConnector();
 
     private:
-    //connectors::Connector[] connectors;
-};
+        Connector* connector;
+    };
 
 
     class AuthConnector : Connector {
     public:
         ~AuthConnector() override;
+
         int auth(std::string loginAndPass);
 
     protected:
-        int connectFunc(const char* AUTH_ADDR,const int AUTH_PORT) override;
+        int connectFunc(const char *AUTH_ADDR, const int AUTH_PORT) override;
+
         int disconnectFunc() override;
 
     private:
@@ -84,19 +90,22 @@ private:
     class ConnectConnector : Connector {
     public:
         ~ConnectConnector() override;
+
         int connectInfo();//узнаем ко скольки соединениям мы можем подключиться
         char connectToNet(std::string connectTo);
+
         const std::string connectRequest = "Connect";
         const char *disconnectAll = "Disconnect all";//когда мы подключаемся напрямую
-                                                     //к сети, то мы получаем это сообщение,
-                                                     //чтобы контроллер начал отключать модули
-                                                     //в то время модуль "коннект" говорил "нет менеджеру",
-                                                     //что к сети хотят подключиться, тот открывает сокет
-                                                     //ииииии клиент напрямую коннектится к нету :D
+        //к сети, то мы получаем это сообщение,
+        //чтобы контроллер начал отключать модули
+        //в то время модуль "коннект" говорил "нет менеджеру",
+        //что к сети хотят подключиться, тот открывает сокет
+        //ииииии клиент напрямую коннектится к нету :D
 
 
     protected:
-        int connectFunc(const char* CONNECT_ADDR,const int CONNECT_PORT) override;
+        int connectFunc(const char *CONNECT_ADDR, const int CONNECT_PORT) override;
+
         int disconnectFunc() override;
 
     private:

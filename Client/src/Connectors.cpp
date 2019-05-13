@@ -138,3 +138,22 @@ char connectors::ConnectConnector::connectToNet(std::string connectTo)
 
 }
 
+connectors::Controller::Controller(config::Config config) {
+
+}
+
+bool connectors::Controller::connectAll() {
+    return false;
+}
+
+bool connectors::Controller::disconnectAll() {
+    return false;
+}
+
+int connectors::Controller::getAuthConnector() {
+    return 0;
+}
+
+int connectors::Controller::getConnectConnector() {
+    return 0;
+}

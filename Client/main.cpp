@@ -6,7 +6,7 @@ int main(){
     //config::Config config;
     //config.read();
 
-    //connectors::Controller connController;
+    //connectors::Controller connectController;
     //connController.connectAll();
 
     //ui::Controller uiController(connController);
