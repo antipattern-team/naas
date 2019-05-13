@@ -29,8 +29,8 @@ file(GLOB SHARED_HDRS
         "include/*.h"
         )
 
-add_executable(server server.cpp ${SERVER_SRCS} ${SERVER_HDRS} ${SHARED_SRCS} ${SHARED_HDRS})
+add_executable(server server.cpp ${SERVER_SRCS} ${SERVER_HDRS} ${SHARED_SRCS} ${SHARED_HDRS} include/server/NetworkPool.h src/server/NetworkPool.cpp src/server/Router.cpp)
 target_link_libraries(server pthread)
 
-add_executable(client client.cpp ${CLIENT_SRCS} ${CLIENT_HDRS} ${SHARED_SRCS} ${SHARED_HDRS})
+add_executable(client client.cpp ${CLIENT_SRCS} ${CLIENT_HDRS} ${SHARED_SRCS} ${SHARED_HDRS} include/server/Router.h microServer.cpp)
 target_link_libraries(client pthread)
