@@ -24,14 +24,14 @@ namespace connectors {
 
     class Connector {
     protected:
-        virtual int connectFunc(const char *SERVER_ADDR, const int SERVER_PORT) = 0;
+        virtual int connectFunc(const char *SERVER_ADDR,  uint16_t SERVER_PORT) = 0;
 
         virtual int disconnectFunc() = 0;
 
         const std::string disconnectRequest = "Kill";
 
     public:
-        virtual ~Connector();
+        virtual ~Connector() = default;
     };
 
 
@@ -41,9 +41,9 @@ namespace connectors {
         Controller(Connector* conn) : connector(conn) {}
         ~Controller() {delete connector;}
 
-        bool connectAll();
+        void connectAll();
 
-        bool disconnectAll();
+        void disconnectAll();
 
 
         int getAuthConnector();
@@ -57,12 +57,11 @@ namespace connectors {
 
     class AuthConnector : Connector {
     public:
-        ~AuthConnector() override;
 
         int auth(std::string loginAndPass);
 
     protected:
-        int connectFunc(const char *AUTH_ADDR, const int AUTH_PORT) override;
+        int connectFunc(const char *AUTH_ADDR,  uint16_t AUTH_PORT) override;
 
         int disconnectFunc() override;
 
@@ -89,10 +88,10 @@ private:
 
     class ConnectConnector : Connector {
     public:
-        ~ConnectConnector() override;
+
 
         int connectInfo();//узнаем ко скольки соединениям мы можем подключиться
-        char connectToNet(std::string connectTo);
+        int connectToNet(std::string connectTo);
 
         const std::string connectRequest = "Connect";
         const char *disconnectAll = "Disconnect all";//когда мы подключаемся напрямую
@@ -104,7 +103,7 @@ private:
 
 
     protected:
-        int connectFunc(const char *CONNECT_ADDR, const int CONNECT_PORT) override;
+        int connectFunc(const char *CONNECT_ADDR,  uint16_t CONNECT_PORT) override;
 
         int disconnectFunc() override;
 
