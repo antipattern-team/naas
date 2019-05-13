@@ -9,37 +9,37 @@ namespace ui {
 
     class Controller {
     public:
-        main(); // передает управление сразу какому-то начальному вью
-        changeView();
+        int main(); // передает управление сразу какому-то начальному вью
+        //changeView();
 
     private:
-        View[] views;
+        //View[] views;
     };
 
 
     class View {
     public:
-        main();
+        //main();
     };
 
 
     class AuthView : View {
     public:
-        main();
+        //main();
 
     private:
         Controller controller;
-        состояние...;
+        //состояние...;
     };
 
 
     class ConfigView : View {
     public:
-        main();
+        //main();
 
     private:
         Controller controller;
-        состояние...;
+        //состояние...;
     };
 
 

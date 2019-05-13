@@ -11,7 +11,7 @@ namespace config {
 
     class Config {
     public:
-        read();
+        int read();
     private:
         const char* configFile = "files/ConfigFile.txt";
 

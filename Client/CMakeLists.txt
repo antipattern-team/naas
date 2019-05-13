@@ -10,5 +10,5 @@ file(GLOB CLIENT_HDRS
         )
 
 
-add_executable(client client.cpp ${CLIENT_SRCS} ${CLIENT_HDRS})
+add_executable(client main.cpp ${CLIENT_SRCS} ${CLIENT_HDRS})
 target_link_libraries(client pthread)
