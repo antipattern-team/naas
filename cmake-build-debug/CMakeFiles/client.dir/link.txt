@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/client.dir/client.cpp.o CMakeFiles/client.dir/src/client/simpletun.cpp.o CMakeFiles/client.dir/src/rwr.cpp.o CMakeFiles/client.dir/microServer.cpp.o  -o client -lpthread 

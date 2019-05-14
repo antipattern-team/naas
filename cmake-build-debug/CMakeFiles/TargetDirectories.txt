@@ -1,0 +1,4 @@
+/home/moira-q/naas/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/moira-q/naas/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/moira-q/naas/cmake-build-debug/CMakeFiles/client.dir
+/home/moira-q/naas/cmake-build-debug/CMakeFiles/server.dir
