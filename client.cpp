@@ -9,16 +9,20 @@
 #include <thread>
 #include <csignal>
 #include <sys/stat.h>
+#include <vector>
+#include <string>
 
 #include "client/simpletun.h"
 
 
-const char *SERVER_ADDR = "194.67.201.7";  // mb std::string
+std::string SERVER_ADDR = "194.67.201.7";  // mb char* idk
 const int SERVER_PORT = 12345;
 const int BUFF_SIZE = 4* 1024;
 const char *tun_name = "vpn_tun";
 int sock_fd;
 int tap_fd;
+
+bool is_everything_ok = true;
 
 void create_tun(const std::string &vip) {
     std::string syscall = "bash scripts/tun.sh ";
@@ -35,93 +39,117 @@ void delete_tun() {
 }
 
 void term_handler(int i){
+    // int s = socket(AF_INET, SOCK_STREAM, 0);
+    // in_addr in;
+    // int res = inet_aton(SERVER_ADDR, &in);
+    // if (!res) {
+    //     exit;
+    // }
+
+    // sockaddr_in sockaddr_ = {
+    //         .sin_family = AF_INET,
+    //         .sin_port = htons(SERVER_PORT),
+    //         .sin_addr = in
+    // };
+    // connect(s, (sockaddr*) &sockaddr_, sizeof(sockaddr_));
+    // send(s, (void *)"disconnect", strlen("disconnect"), 0);
+
+    // close(sock_fd);
+    // close(tap_fd);
+    // delete_tun();
+
+    // exit(EXIT_SUCCESS);
+    is_everything_ok = false;
+}
+void threadfunc(const std::string& addr, int threadnum) {
     int s = socket(AF_INET, SOCK_STREAM, 0);
-    in_addr in;
-    int res = inet_aton(SERVER_ADDR, &in);
-    if (!res) {
+    in_addr inn;
+    const char* c= addr.c_str(); //сокетовские библиотеки умеют или в char*, или в пакет, лучше уж char*
+    int res = inet_aton(c, &inn);
+    if (!res)
+    {
+        std::cout<<errno;
         exit;
     }
 
     sockaddr_in sockaddr_ = {
             .sin_family = AF_INET,
-            .sin_port = htons(SERVER_PORT),
-            .sin_addr = in
-    };
-    connect(s, (sockaddr*) &sockaddr_, sizeof(sockaddr_));
-    send(s, (void *)"disconnect", strlen("disconnect"), 0);
+            .sin_port = htons(SERVER_PORT), //счетчик сюда
+            .sin_addr = inn};
 
-    close(sock_fd);
-    close(tap_fd);
+    std::string request = "1";
+
+    // -----------------------------------------
+
+    connect(s, (sockaddr *)&sockaddr_, sizeof(sockaddr_));
+    send(s, (void *)request.c_str(), strlen(request.c_str()), 0);
+
+    char buff[BUFF_SIZE];
+//    int recv_bytes = recv(s, buff, BUFF_SIZE, 0); never used you feel?
+    std::stringstream dhcp_input(buff);
+
+    std::string vip;
+    dhcp_input >> vip;
+//
+//    // std::cout << buff << std::endl;
+//
+//    // if (vip == "ERR")
+//    // {
+//    //     std::string error_type;
+//    //     dhcp_input >> error_type;
+//    //     std::cout << "Error occured: " << error_type << std::endl;
+//    //     return 55;
+//    // }
+//    close(s);
+
+    create_tun(vip);
+    // записываем в название потока его номер
+    auto name = "vpn_tun" + std::to_string(threadnum);
+    connect_to_server(name, c, sock_fd, tap_fd);
+//    fd_set rd_set;
+//    FD_ZERO(&rd_set);
+//    FD_SET(s, &rd_set);
+//    auto smth = select(s + 1, &rd_set, NULL, NULL, NULL);
+//    std::cout<<smth<<" "<<std::endl; //почему бы и нет
+
     delete_tun();
-
-    exit(EXIT_SUCCESS);
 }
 
 int main() {
+
+
+    // <-- получаем айпишники серверов
+
+    std::vector<std::string> ips;
+
     int s = socket(AF_INET, SOCK_STREAM, 0);
     in_addr in;
-    int res = inet_aton(SERVER_ADDR, &in);
+    const char* ser= SERVER_ADDR.c_str();
+    int res = inet_aton(ser, &in);
     if (!res) {
-        return -2;
+        return -1;
     }
-
     sockaddr_in sockaddr_ = {
             .sin_family = AF_INET,
             .sin_port = htons(SERVER_PORT),
             .sin_addr = in
     };
-
-
-
-    // Формирование запроса
-    // -----------------------------------------
-
-    std::string request_type;
-    std::string net_name;
-    std::string net_pass;
-
-    std::cin >> request_type;
-
-    // For developers only. This request will be removed from the public version.
-    if(request_type == "shutdown") {
-        connect(s, (sockaddr*) &sockaddr_, sizeof(sockaddr_));
-        send(s, (void *)request_type.c_str(), strlen(request_type.c_str()), 0);
-        return 0;
-    } else if (request_type != "connect" && request_type != "create") {
-        std::cout << "Invalid request type." << std::endl;
-        return 1;
+    int connection_result = connect(s, (sockaddr*) &sockaddr_, sizeof(sockaddr_));
+    if (connection_result) {
+        std::cout << connection_result << std::endl;
+        std::cout << errno << std::endl;
+    }
+    int n = 1; // пока что у Влада в списке пара айпишников, поэтому тупо хардкод
+    char buff[1024];
+    for (int i = 0; i <= n; i++ ) {
+        recv(s, buff, sizeof(buff), 0);
+        ips[i] = std::string(buff);           //жуткий говнокод, но не char* recv-ом упорно не принимается, а вектор структур - еще худший говнокод
     }
 
-    std::cin >> net_name >> net_pass;  // пока пусть будет так
-    std::string request = request_type + " " + net_name + " " + net_pass;
-
-    // -----------------------------------------
-
-
-
-    connect(s, (sockaddr*) &sockaddr_, sizeof(sockaddr_));
-    send(s, (void *)request.c_str(), strlen(request.c_str()), 0);
-
-    char buff[BUFF_SIZE];
-    int recv_bytes = recv(s, buff, BUFF_SIZE, 0);
-    std::stringstream dhcp_input(buff);
-
-    std::string vip;
-    dhcp_input >> vip;
-
-    std::cout << buff << std::endl;
-
-    if (vip == "ERR") {
-        std::string error_type;
-        dhcp_input >> error_type;
-        std::cout << "Error occured: " << error_type << std::endl;
-        return 55;
-    }
-    close(s);
-
-    create_tun(vip);
 
     int pid = fork();
+
+
 
     if (pid == -1) // если не удалось запустить потомка
     {
@@ -145,8 +173,17 @@ int main() {
 
         //
         std::signal(SIGTERM, term_handler);
+        int threadnumber;
+        std::vector<std::thread> threads;
+        for (const auto& ip : ips) {
+            threadnumber++;
+            threads.emplace_back(threadfunc, std::cref(ip), threadnumber); // передаем номер потока
+        }
 
-        connect_to_server("vpn_tun", SERVER_ADDR, sock_fd, tap_fd);
+        for (auto& thread : threads)
+        {
+            thread.join();
+        }
 
         return 0;
     }
