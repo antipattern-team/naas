@@ -39,7 +39,7 @@ bool Router::work() {
 }
 
 std::string Router::generateVip() {
-    return "123.32." + std::to_string(ip_part++) + ".12/24";
+    return "123.32.23." + std::to_string(ip_part++) + "/24";
 }
 
 std::string Router::addUser(const int sd) {

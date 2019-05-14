@@ -13,7 +13,7 @@ NetworkPool::~NetworkPool() {
 
 }
 void NetworkPool::listenConfig() {
-    auto ip = "123.32.23.12/24";
+    auto ip = "123.32.23.0/24";
     //this->createAndServRouter("123.32." + std::to_string(ip_part++) + ".12/24", this->port++);
     this->createAndServRouter(ip, this->port++);
 

@@ -19,7 +19,6 @@ public:
 
 private:
     unsigned int port = 10000;
-    unsigned int ip_part = 22;
     std::vector<Router> routers;
 
 };
