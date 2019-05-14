@@ -15,8 +15,9 @@
 #include "client/simpletun.h"
 
 
-std::string SERVER_ADDR = "194.67.201.7";  // mb char* idk
+const char * SERVER_ADDR = "192.168.43.192";  // mb char* idk
 const int SERVER_PORT = 12345;
+const int SERVERS_PORT = 10000;
 const int BUFF_SIZE = 4* 1024;
 const char *tun_name = "vpn_tun";
 int sock_fd;
@@ -61,8 +62,8 @@ void term_handler(int i){
     // exit(EXIT_SUCCESS);
     is_everything_ok = false;
 }
-void threadfunc(const std::string& addr, int threadnum) {
-    int s = socket(AF_INET, SOCK_STREAM, 0);
+void threadfunc(const std::string& addr) {
+    int s1 = socket(AF_INET, SOCK_STREAM, 0);
     in_addr inn;
     const char* c= addr.c_str(); //сокетовские библиотеки умеют или в char*, или в пакет, лучше уж char*
     int res = inet_aton(c, &inn);
@@ -74,18 +75,22 @@ void threadfunc(const std::string& addr, int threadnum) {
 
     sockaddr_in sockaddr_ = {
             .sin_family = AF_INET,
-            .sin_port = htons(SERVER_PORT), //счетчик сюда
-            .sin_addr = inn};
+            .sin_port = htons(SERVERS_PORT), //счетчик сюда
+            .sin_addr = inn
+    };
 
     std::string request = "1";
 
     // -----------------------------------------
+    std::cout<<"lol228   "<<addr<<"  "<< c << std::endl;
 
-    connect(s, (sockaddr *)&sockaddr_, sizeof(sockaddr_));
-    send(s, (void *)request.c_str(), strlen(request.c_str()), 0);
+    connect(s1, (sockaddr*) &sockaddr_,  sizeof(sockaddr_));
+
+    std::cout<<"lol7"<< std::endl;
+    //send(s1, (void *)request.c_str(), strlen(request.c_str()), 0);
 
     char buff[BUFF_SIZE];
-//    int recv_bytes = recv(s, buff, BUFF_SIZE, 0); never used you feel?
+    recv(s1, buff, BUFF_SIZE, 0);
     std::stringstream dhcp_input(buff);
 
     std::string vip;
@@ -101,16 +106,11 @@ void threadfunc(const std::string& addr, int threadnum) {
 //    //     return 55;
 //    // }
 //    close(s);
-
+    std::cout<<"lol23222"<< std::endl;
     create_tun(vip);
     // записываем в название потока его номер
-    auto name = "vpn_tun" + std::to_string(threadnum);
+    auto name = "vpn_tun" + std::to_string(1);
     connect_to_server(name, c, sock_fd, tap_fd);
-//    fd_set rd_set;
-//    FD_ZERO(&rd_set);
-//    FD_SET(s, &rd_set);
-//    auto smth = select(s + 1, &rd_set, NULL, NULL, NULL);
-//    std::cout<<smth<<" "<<std::endl; //почему бы и нет
 
     delete_tun();
 }
@@ -120,12 +120,11 @@ int main() {
 
     // <-- получаем айпишники серверов
 
-    std::vector<std::string> ips;
+    std::vector<std::string> ip(2);
 
     int s = socket(AF_INET, SOCK_STREAM, 0);
     in_addr in;
-    const char* ser= SERVER_ADDR.c_str();
-    int res = inet_aton(ser, &in);
+    int res = inet_aton(SERVER_ADDR, &in);
     if (!res) {
         return -1;
     }
@@ -137,13 +136,24 @@ int main() {
     int connection_result = connect(s, (sockaddr*) &sockaddr_, sizeof(sockaddr_));
     if (connection_result) {
         std::cout << connection_result << std::endl;
-        std::cout << errno << std::endl;
+        std::cout << errno << "gg" << std::endl;
+
+
     }
-    int n = 1; // пока что у Влада в списке пара айпишников, поэтому тупо хардкод
+    int n = 0;
     char buff[1024];
-    for (int i = 0; i <= n; i++ ) {
+    ip[0] = "";
+
+    std::cout<<"Hello world"<<std::endl;
+    for(int i = 0; i <= n; i++) {
+        std::cout<<"HUI"<<std::endl;
         recv(s, buff, sizeof(buff), 0);
-        ips[i] = std::string(buff);           //жуткий говнокод, но не char* recv-ом упорно не принимается, а вектор структур - еще худший говнокод
+        std::cout << buff << std::endl;
+        std::string str = std::string(buff);
+        std::cout<<str<<std::endl;
+        ip[i] =  str;
+
+        //sleep(0);
     }
 
 
@@ -167,24 +177,32 @@ int main() {
         printf("My pid is %i\n", getpid());
 
         // закрываем дискрипторы ввода/вывода/ошибок, так как нам они больше не понадобятся
-        close(STDIN_FILENO);
-        close(STDOUT_FILENO);
-        close(STDERR_FILENO);
 
-        //
+
+
         std::signal(SIGTERM, term_handler);
-        int threadnumber;
-        std::vector<std::thread> threads;
-        for (const auto& ip : ips) {
-            threadnumber++;
-            threads.emplace_back(threadfunc, std::cref(ip), threadnumber); // передаем номер потока
-        }
+        int threadnumber = 1;
+        close(s);
+        std::vector<std::thread> threads(2);
+        std::cout<<ip[0]<< std::endl;
+        std::cout<<"lol5"<< std::endl;
+        threads.emplace_back(threadfunc, std::cref(ip[0])); // передаем номер потока
 
-        for (auto& thread : threads)
-        {
+
+
+
+
+        std::cout<<"lol6"<< std::endl;
+        for (auto& thread : threads) {
+
             thread.join();
         }
-
+        std::cout<<"lol"<< std::endl;
+        close(STDIN_FILENO);
+        std::cout<<"lol2"<< std::endl;
+        close(STDOUT_FILENO);
+        std::cout<<"lol3"<< std::endl;
+        close(STDERR_FILENO);
         return 0;
     }
     else // если это родитель
