@@ -1,0 +1,5 @@
+/home/sancho/CLionProjects/test_two_sockets/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/sancho/CLionProjects/test_two_sockets/cmake-build-debug/CMakeFiles/serv.dir
+/home/sancho/CLionProjects/test_two_sockets/cmake-build-debug/CMakeFiles/client.dir
+/home/sancho/CLionProjects/test_two_sockets/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/sancho/CLionProjects/test_two_sockets/cmake-build-debug/CMakeFiles/auth.dir

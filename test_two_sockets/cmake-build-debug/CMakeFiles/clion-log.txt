@@ -1,0 +1,4 @@
+/home/sancho/Загрузки/clion-2018.3.4/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/sancho/CLionProjects/test_two_sockets
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/sancho/CLionProjects/test_two_sockets/cmake-build-debug

@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/sancho/CLionProjects/test_two_sockets/auth.cpp
+sys/socket.h
+-
+netinet/in.h
+-
+iostream
+-
+unistd.h
+-
+sys/stat.h
+-
+vector
+-
+string
+-
+

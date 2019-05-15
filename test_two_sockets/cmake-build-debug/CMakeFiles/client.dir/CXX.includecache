@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/sancho/CLionProjects/test_two_sockets/main.cpp
+sys/socket.h
+-
+netinet/in.h
+-
+arpa/inet.h
+-
+iostream
+-
+cstring
+-
+unistd.h
+-
+map
+-
+sstream
+-
+thread
+-
+csignal
+-
+sys/stat.h
+-
+vector
+-
+string
+-
+

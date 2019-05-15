@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/test_two_sockets.dir/main.cpp.o  -o test_two_sockets 
