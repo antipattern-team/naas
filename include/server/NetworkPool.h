@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 #include <thread>
+#include <stdio.h>
+#include <iostream>
 #include "Router.h"
 
 class NetworkPool{

@@ -4,6 +4,7 @@
 #include "server/NetworkPool.h"
 
 int main() {
+    std::cout << "Начинаю работу" << std::endl;
     NetworkPool pool;
     pool.listenConfig();
 

@@ -12,8 +12,8 @@
 class Router{
 public:
     Router();
-    Router(std::string m_ip, unsigned m_port) { ip = m_ip; port = m_port};
-    bool work();
+    Router(std::string m_ip, unsigned m_port) { ip = m_ip; port = m_port;};
+    void work();
     std::string generateVip();
     std::string addUser(int sd);
     ~Router();
@@ -21,9 +21,9 @@ public:
 private:
     std::string ip;
     unsigned int port;
-    unsigned int ip_part = 0;
-    std::map<int, std::string> vip_table;
-    bool inTable(int sock_desk);
+    unsigned int ip_part = 1;
+    std::map<std::string, int> vip_table;
+    //bool inTable(int sock_desk);
 
 
 
