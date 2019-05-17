@@ -38,7 +38,7 @@
 #include <cstdarg>
 #include <string>
 #include <iostream>
-#include "rwr.h"
+#include "../include/rwr.h"
 
 /* buffer for reading from tun/tap interface, must be >= 1500 */
 #define BUFSIZE 2000

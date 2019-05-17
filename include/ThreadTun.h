@@ -1,0 +1,11 @@
+
+#ifndef TEST_TWO_SOCKETS_THREADTUN_H
+#define TEST_TWO_SOCKETS_THREADTUN_H
+
+
+class ThreadTun {
+
+};
+
+
+#endif //TEST_TWO_SOCKETS_THREADTUN_H

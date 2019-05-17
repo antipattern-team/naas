@@ -39,26 +39,6 @@ void delete_tun() {
 }
 
 void term_handler(int i){
-    // int s = socket(AF_INET, SOCK_STREAM, 0);
-    // in_addr in;
-    // int res = inet_aton(SERVER_ADDR, &in);
-    // if (!res) {
-    //     exit;
-    // }
-
-    // sockaddr_in sockaddr_ = {
-    //         .sin_family = AF_INET,
-    //         .sin_port = htons(SERVER_PORT),
-    //         .sin_addr = in
-    // };
-    // connect(s, (sockaddr*) &sockaddr_, sizeof(sockaddr_));
-    // send(s, (void *)"disconnect", strlen("disconnect"), 0);
-
-    // close(sock_fd);
-    // close(tap_fd);
-    // delete_tun();
-
-    // exit(EXIT_SUCCESS);
     is_everything_ok = false;
 }
 
@@ -71,7 +51,7 @@ int main() {
 
     int pid = fork();
 
-    
+
 
     if (pid == -1) // если не удалось запустить потомка
     {
@@ -126,9 +106,9 @@ void threadfunc(const std::string& addr) {
     // }
 
     sockaddr_in sockaddr_ = {
-        .sin_family = AF_INET,
-        .sin_port = htons(SERVER_PORT),
-        .sin_addr = in};
+            .sin_family = AF_INET,
+            .sin_port = htons(SERVER_PORT),
+            .sin_addr = in};
 
     std::string request = "1";
 
@@ -156,7 +136,7 @@ void threadfunc(const std::string& addr) {
     close(s);
 
     create_tun(vip);
-                                                                            // работай с интерфейсом vpn_tun(номер потока)
+    // работай с интерфейсом vpn_tun(номер потока)
     connect_to_server("vpn_tun", SERVER_ADDR, sock_fd, tap_fd);
 
     delete_tun();                                                           // перепиши (наверное)
