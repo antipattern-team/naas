@@ -22,7 +22,7 @@ int main(){
 
     listen(s, 1);
 
-   // while(1)
+    while(1)
     {
         char buff[100];
         sock = accept(s, NULL, NULL);

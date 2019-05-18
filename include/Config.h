@@ -8,6 +8,9 @@
 #include <vector>
 #include <string>
 
+
+
+
 struct Data{
     std::string ip;
     int port = 0;
