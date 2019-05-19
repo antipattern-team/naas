@@ -20,7 +20,6 @@ class Config {
 public:
     void read(std::vector <Data> &configVector);
     void write(std::vector <Data> &configVector);
-    void record(std::vector <Data> &configVector);
 private:
     //const char* configFile = "configFile";
 

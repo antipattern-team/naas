@@ -52,7 +52,7 @@ int main() {
 
     switch (switcher) {
 
-        case (1) :
+        case (1) : //auth
 
             std::cout << "1-auth" << "      " << "2-create new acc" <<"     "<<"3 - user list"<<std::endl;
             std::cin >> answer;
@@ -78,7 +78,7 @@ int main() {
 
                     break;
             }
-        case (2) :
+        case (2) : //connect
             std::cout << "1 - ask for vip list access" <<"       "<<"2 - get list"<<"       "<<"3  -  connect to permitted serv"<<std::endl;
             std::cin >> answer;
             switch(answer) {
@@ -101,24 +101,24 @@ int main() {
 
                     break;
             }
-        case (3) :
-            std::cout<<"1 - get list of UIs"<<"     "<<"2 - add UI"<<std::endl;
-            std::cin>>answer;
-            switch(answer){
-                case(1):
-                conf.write(configVector);
-                break;
-                case(2):
-                std::cout<<"Enter wanted UI"<<std::endl;
-                    std::cin >> sendMessage;
-                    viModules.communicationWthConfig(sendMessage, recMessage); // tho still 8 bits rcdv, idk
-                    std::cout << "Enter port" << std::endl;
-                    std::cin >> sendMessage;
-                    viModules.communicationWthConfig(sendMessage, recMessage); // collision between int and string may happen, need converter?
-                    break;
-                default:
-                    break;
-            }
+//        case (3) : //config
+//            std::cout<<"1 - get list of UIs"<<"     "<<"2 - add UI"<<std::endl;
+//            std::cin>>answer;
+//            switch(answer){
+//                case(1):
+//                conf.write(configVector);
+//                break;
+//                case(2):
+//                std::cout<<"Enter wanted UI"<<std::endl;
+//                    std::cin >> sendMessage;
+//                    viModules.communicationWthConfig(sendMessage, recMessage); // tho still 8 bits rcdv, idk
+//                    std::cout << "Enter port" << std::endl;
+//                    std::cin >> sendMessage;
+//                    viModules.communicationWthConfig(sendMessage, recMessage); // collision between int and string may happen, need converter?
+//                    break;
+//                default:
+//                    break;
+//            }
                 default:
             break;
     }
