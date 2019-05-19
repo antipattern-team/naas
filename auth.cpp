@@ -8,7 +8,7 @@
 #include <vector>
 #include <string>
 
-const char ip[4 * 1024] = "1.2.3.4";
+const char ip[4 * 1024] = "1.2.3.4 mne pezdaaaaaaaaaaaaa";
 
 int main(){
     int sock;
