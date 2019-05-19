@@ -37,7 +37,9 @@ int main() {
 
 
     std::cout << "pupa"<< std::endl;
+
     //connect to UI modules
+
     viModules.connectAuth(configVector);
     viModules.connectConfig(configVector);
     viModules.connectConnect(configVector);
@@ -61,7 +63,7 @@ int main() {
                 case (1) :
                     std::cout << "Enter your login" << std::endl;
                     std::cin >> sendMessage;
-                    viModules.communicationWthAuth(sendMessage, recMessage); // rec only 8 bit ???????????????
+                    viModules.communicationWthAuth(sendMessage, recMessage);
                 //create_token as string func of auth? discuss with Sanya
                     break;
                 case (2) :
@@ -86,10 +88,10 @@ int main() {
                 case (1):
                     std::cout << "Enter your login" << std::endl;
                     std::cin >> sendMessage;
-                    viModules.communicationWthConnect(sendMessage, recMessage); // tho still 8 bits rcdv, idk
+                    viModules.communicationWthConnect(sendMessage, recMessage);
                     std::cout << "Enter your token" << std::endl;
                     std::cin >> sendMessage;
-                    viModules.communicationWthConnect(sendMessage, recMessage); // tho still 8 bits rcdv, idk
+                    viModules.communicationWthConnect(sendMessage, recMessage);
                     break;
                 case (2):
                     conf.write(configVector);
@@ -101,24 +103,24 @@ int main() {
 
                     break;
             }
-//        case (3) : //config
-//            std::cout<<"1 - get list of UIs"<<"     "<<"2 - add UI"<<std::endl;
-//            std::cin>>answer;
-//            switch(answer){
-//                case(1):
-//                conf.write(configVector);
-//                break;
-//                case(2):
-//                std::cout<<"Enter wanted UI"<<std::endl;
-//                    std::cin >> sendMessage;
-//                    viModules.communicationWthConfig(sendMessage, recMessage); // tho still 8 bits rcdv, idk
-//                    std::cout << "Enter port" << std::endl;
-//                    std::cin >> sendMessage;
-//                    viModules.communicationWthConfig(sendMessage, recMessage); // collision between int and string may happen, need converter?
-//                    break;
-//                default:
-//                    break;
-//            }
+        case (3) : //config
+            std::cout<<"1 - get list of UIs"<<"     "<<"2 - add UI"<<std::endl;
+            std::cin>>answer;
+            switch(answer){
+                case(1):
+                conf.write(configVector);
+                break;
+                case(2):
+                std::cout<<"Enter wanted UI"<<std::endl;
+                    std::cin >> sendMessage;
+                    viModules.communicationWthConfig(sendMessage, recMessage); // tho still 8 bits rcdv, idk
+                    std::cout << "Enter port" << std::endl;
+                    std::cin >> sendMessage;
+                    viModules.communicationWthConfig(sendMessage, recMessage); // collision between int and string may happen, need converter?
+                    break;
+                default:
+                    break;
+            }
                 default:
             break;
     }
