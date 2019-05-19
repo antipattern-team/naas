@@ -11,7 +11,7 @@ bool ViModules::connectAuth(std::vector <Data> configVector)
     sockaddr_.sin_family = AF_INET;
     sockaddr_.sin_port = htons(AUTH_PORT);
     sockaddr_.sin_addr.s_addr = inet_addr(AUTH_ADDR);
-
+    std::cout<<sockAuth<<' '<<std::endl;
     int status = connect(sockAuth, (sockaddr*) &sockaddr_, sizeof(sockaddr_));
     if (status){
         std::cout << "errno=" << errno << std::endl << strerror(errno) <<std::endl;
@@ -22,6 +22,7 @@ bool ViModules::connectAuth(std::vector <Data> configVector)
 
 int ViModules::communicationWthAuth(char *sendMess,char *recvMess)
 {
+
     send(sockAuth, (void*)sendMess, sizeof(sendMess), 0);
     recv(sockAuth, recvMess, sizeof(recvMess), 0);
 
@@ -29,7 +30,6 @@ int ViModules::communicationWthAuth(char *sendMess,char *recvMess)
 
     return 0;
 }
-
 bool ViModules::closeSockAuth()
 {
 
@@ -55,7 +55,7 @@ bool ViModules::connectConfig(std::vector<Data> configVector)
     sockaddr_.sin_port = htons(CONFIG_PORT);
     sockaddr_.sin_addr.s_addr = inet_addr(CONFIG_ADDR);
 
-    int status = connect(sockAuth, (sockaddr*) &sockaddr_, sizeof(sockaddr_));
+    int status = connect(sockConfig, (sockaddr*) &sockaddr_, sizeof(sockaddr_));
     if (!status){
         std::cout << "errno=" << errno << std::endl << strerror(errno) <<std::endl;
         return false;
@@ -65,6 +65,10 @@ bool ViModules::connectConfig(std::vector<Data> configVector)
 
 int ViModules::communicationWthConfig(char *sendMess, char *recvMess)
 {
+    send(sockConfig, (void*)sendMess, sizeof(sendMess), 0);
+    recv(sockConfig, recvMess, sizeof(recvMess), 0);
+
+    std::cout << recvMess << " - cfg says" << std:: endl;
     return 0;
 }
 
@@ -84,7 +88,7 @@ bool ViModules::connectConnect(std::vector<Data> configVector)
     sockaddr_.sin_port = htons(CONNECT_PORT);
     sockaddr_.sin_addr.s_addr = inet_addr(CONNECT_ADDR);
 
-    int status = connect(sockAuth, (sockaddr*) &sockaddr_, sizeof(sockaddr_));
+    int status = connect(sockConnect, (sockaddr*) &sockaddr_, sizeof(sockaddr_));
     if (!status){
         std::cout << "errno=" << errno << std::endl << strerror(errno) <<std::endl;
         return false;
@@ -94,6 +98,11 @@ bool ViModules::connectConnect(std::vector<Data> configVector)
 
 int ViModules::communicationWthConnect(char *sendMess, char *recvMess)
 {
+    send(sockConnect, (void*)sendMess, sizeof(sendMess), 0);
+    recv(sockConnect, recvMess, sizeof(recvMess), 0);
+
+    std::cout << recvMess << " - connect says" << std:: endl;
+
     return 0;
 }
 

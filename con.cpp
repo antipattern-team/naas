@@ -1,5 +1,3 @@
-
-
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <iostream>
@@ -16,7 +14,7 @@ int main(){
 
     sockaddr_in sockaddr_ = {
             .sin_family = AF_INET,
-            .sin_port = htons(12345),
+            .sin_port = htons(12346),
     };
     bind(s, (sockaddr *) &sockaddr_, sizeof(sockaddr_));
 
