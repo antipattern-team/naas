@@ -17,13 +17,13 @@
 class ViModules {
 public:
     bool connectAuth(std::vector <Data> configVector);
-    int communicationWthAuth(char *sendMess,char *recvMess);
+    int communicationWthAuth(char (&sendMess)[4096],char (&recvMess)[4096]);
     bool closeSockAuth();
     bool connectConfig(std::vector <Data> configVector);
-    int communicationWthConfig(char *sendMess,char *recvMess);
+    int communicationWthConfig(char (&sendMess)[4096],char (&recvMess)[4096]);
     bool closeSockConfig();
     bool connectConnect(std::vector <Data> configVector);
-    int communicationWthConnect(char *sendMess,char *recvMess);
+    int communicationWthConnect(char (&sendMess)[4096],char (&recvMess)[4096]);
     bool closeSockConnect();
 
 private:

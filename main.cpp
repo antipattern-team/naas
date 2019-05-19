@@ -24,12 +24,12 @@ int main() {
     Data data;
     ViModules viModules;
     std::vector<Data> configVector;
-    std::vector<authData> authVector;
+    //std::vector<authData> authVector;
     Config conf;
-    auth auth;
+    //auth auth;
     conf.read(configVector);
     //conf.write(configVector);
-    auth.read(authVector);
+    //auth.read(authVector);
     //auth.write(authVector);
     char recMessage[BUFF_SIZE];
     char sendMessage[BUFF_SIZE];
@@ -73,7 +73,7 @@ int main() {
                     viModules.communicationWthAuth(sendMessage, recMessage);
                     break;
                 case (3) :
-                    auth.write(authVector);
+                    //auth.write(authVector);
                 default:
 
                     break;

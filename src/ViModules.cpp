@@ -20,7 +20,7 @@ bool ViModules::connectAuth(std::vector <Data> configVector)
     return true;
 }
 
-int ViModules::communicationWthAuth(char *sendMess,char *recvMess)
+int ViModules::communicationWthAuth(char (&sendMess)[4096],char (&recvMess)[4096])
 {
 
     send(sockAuth, (void*)sendMess, sizeof(sendMess), 0);
@@ -63,7 +63,7 @@ bool ViModules::connectConfig(std::vector<Data> configVector)
     return true;
 }
 
-int ViModules::communicationWthConfig(char *sendMess, char *recvMess)
+int ViModules::communicationWthConfig(char (&sendMess)[4096],char (&recvMess)[4096])
 {
     send(sockConfig, (void*)sendMess, sizeof(sendMess), 0);
     recv(sockConfig, recvMess, sizeof(recvMess), 0);
@@ -96,7 +96,7 @@ bool ViModules::connectConnect(std::vector<Data> configVector)
     return true;
 }
 
-int ViModules::communicationWthConnect(char *sendMess, char *recvMess)
+int ViModules::communicationWthConnect(char (&sendMess)[4096],char (&recvMess)[4096])
 {
     send(sockConnect, (void*)sendMess, sizeof(sendMess), 0);
     recv(sockConnect, recvMess, sizeof(recvMess), 0);
