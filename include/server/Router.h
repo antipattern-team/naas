@@ -29,7 +29,7 @@ private:
     unsigned int ip_part = 1;
     std::string ip_area;//область которую охватывает роутер (122.120.х.)
     std::map<std::string, int> vip_table;
-    std::map<std::string, int> vip_table_routers;
+    //std::map<std::string, int> vip_table_routers;
     //bool inTable(int sock_desk);
 
 

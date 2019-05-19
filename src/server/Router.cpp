@@ -129,11 +129,7 @@ std::string Router::addUser(const int sd) {
 }
 
 int Router::choiceUrSocket(std::string ip) {
-    /*for(auto& str : vip_table) {
-        if (str.first == ip) {
-            return str.second;
-        }
-    }*/
+
     std::vector<int> m;
     for(auto& str : vip_table) {
         m.push_back(compareIp(ip, str.first));
