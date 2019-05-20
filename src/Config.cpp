@@ -7,7 +7,7 @@
 void Config::read(std::vector <Data> &configVector) {
 
     Data data;
-    std::ifstream fin("configFile.txt");
+    std::ifstream fin("files/configFile.txt");
     while (!fin.eof()) {
 
         fin >> data.ip >> data.port;

@@ -19,14 +19,14 @@
 
 const int BUFF_SIZE = 4 * 1024;
 
-const char *SERVER_ADDR = "172.16.87.16";  // mb std::string
+const char *SERVER_ADDR = "127.0.0.1";  // mb std::string
 const int SERVER_PORT = 10000;
 const char *tun_name = "vpn_tun";
 int sock_fd;
 int tap_fd;
 
 void create_tun(const std::string &vip) {
-    std::string syscall = "bash scripts/tun.sh ";
+    std::string syscall = "bash tun.sh ";
     syscall += tun_name;
     syscall += " ";
     syscall += vip;
@@ -34,7 +34,7 @@ void create_tun(const std::string &vip) {
 }
 
 void delete_tun() {
-    std::string syscall = "bash scripts/tun_del.sh ";
+    std::string syscall = "bash tun_del.sh ";
     syscall += tun_name;
     system(syscall.c_str());
 }
@@ -74,7 +74,7 @@ int main() {
     Config conf;
     //auth auth;
     conf.read(configVector);
-    //conf.write(configVector);
+    conf.write(configVector);
     //auth.read(authVector);
     //auth.write(authVector);
     char recMessage[BUFF_SIZE];
