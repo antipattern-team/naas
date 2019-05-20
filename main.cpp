@@ -19,7 +19,7 @@
 
 const int BUFF_SIZE = 4 * 1024;
 
-const char *SERVER_ADDR = "192.168.43.192";  // mb std::string
+const char *SERVER_ADDR = "172.16.87.16";  // mb std::string
 const int SERVER_PORT = 10000;
 const char *tun_name = "vpn_tun";
 int sock_fd;
@@ -163,7 +163,7 @@ int main() {
                     connect(s, (sockaddr*) &sockaddr_, sizeof(sockaddr_));
 
                     char buff[BUFF_SIZE];
-                    int recv_bytes = recv(s, buff, BUFF_SIZE, 0);
+                    recv(s, buff, BUFF_SIZE, 0);
                     std::stringstream dhcp_input(buff);
 
                     std::string vip;
