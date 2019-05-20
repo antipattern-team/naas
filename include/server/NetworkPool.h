@@ -21,6 +21,8 @@ public:
 
 private:
     unsigned int port = 10000;
+    unsigned int  currentVip = 3;//x начиная с 3
+    std::string basicVip = "122.120.";//маршрутизаторы будут 122.120.x.0
     std::vector<Router> routers;
 
 };
