@@ -1,4 +1,4 @@
-#include "Authentification.h"
+#include "../include/Authentification.h"
 
 void auth::read(std::vector <authData> &authVector) {
     authData data;
