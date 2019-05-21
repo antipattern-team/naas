@@ -19,6 +19,8 @@ public:
     void work();
     std::string generateVip();
     std::string addUser(int sd);
+    int getRouters();
+    int connectToRouters();
     int choiceUrSocket(std::string ip);
     void getVip();
     int connect_router(int port); ////
@@ -29,10 +31,12 @@ private:
     int compareIp(std::string aip, std::string bip);// сравнивает значимые байты двух ip и возвращает количество совпадений
 
     std::string ip;
+    std::string filename;
     unsigned int port;
     unsigned int ip_part = 1;
     std::string ip_area;//область которую охватывает роутер (122.120.х.)
     std::map<std::string, int> vip_table;
+    std::map<std::string, int> routers_table;
     //std::map<std::string, int> vip_table_routers;
     //bool inTable(int sock_desk);
 

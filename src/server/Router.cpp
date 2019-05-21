@@ -15,6 +15,7 @@
 #include <set>
 #include <cstring>
 #include <vector>
+#include <fstream>
 
 Router::Router() {
 
@@ -50,7 +51,14 @@ void Router::work() {
          std::cout << "Отправил vip Челам"  << std::endl;
 
      }*/
+
     std::cout<<"work"<<std::endl;
+
+    std::cout<<"Заполняю таблицу router_table"<<std::endl;
+    getRouters();
+    std::cout<<"соединяю и внонушу данные о роутерах в vip_table(не соединяю и не вношу) "<<std::endl;
+
+
 
     int listener;
     struct sockaddr_in addr;
@@ -224,11 +232,6 @@ int Router::compareIp(std::string aip, std::string bip) {
         return false;
 }*/
 
-
-
-
-
-
 int Router::connect_router (int port) {
     const char *SERVER_ADDR = "192.168.0.43";  // ip server
 
@@ -249,6 +252,25 @@ int Router::connect_router (int port) {
     std::cout<<"connect"<<std::endl;
 
     connect(s, (sockaddr*) &sockaddr_, sizeof(sockaddr_));
-    return 0;
+    return s;
 
+}
+
+int Router::getRouters() {
+    std::ifstream file("/home/moira-q/CLionProjects/read/file.txt");
+    std::string c_vip;
+    int c_port = 0;
+    if(file.is_open()) {
+        while((file >> c_port) && ((getline(file, c_vip)))) {
+            routers_table[c_vip] = c_port;
+        }
+    }
+    return 0;
+}
+
+int Router::connectToRouters() {
+    for(auto& str : routers_table) {
+       vip_table[str.first] = connect_router(str.second);
+    }
+    return 0;
 }
