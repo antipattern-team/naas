@@ -8,7 +8,7 @@ int main() {
     std::cout << "Начинаю работу" << std::endl;
     NetworkPool pool;
     pool.listenConfig();
-/*    std::cout << "2 поток"  << std::endl;
+ /*   std::cout << "2 поток"  << std::endl;
     pool.listenConfig();
     std::cout << "3 поток"  << std::endl;
     pool.listenConfig();*/

@@ -18,15 +18,17 @@ public:
     };
     void work();
     std::string generateVip();
-    std::string addUser(int sd);
+    std::string addUser();
     int choiceUrSocket(std::string ip);
     void getVip();
     int connect_router(int port); ////
+    int foo();
 
     ~Router();
 
 private:
     int compareIp(std::string aip, std::string bip);// сравнивает значимые байты двух ip и возвращает количество совпадений
+    int shut = false;
 
     std::string ip;
     unsigned int port;

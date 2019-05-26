@@ -15,6 +15,8 @@
 #include <set>
 #include <cstring>
 #include <vector>
+#include <thread>
+
 
 Router::Router() {
 
@@ -22,6 +24,52 @@ Router::Router() {
 
 Router::~Router() {
 
+}
+int Router::foo() {
+#define DHCP_BUFSIZE 4096
+#define BUFSIZE 20000
+#define DHCP_PORT 10000
+#define PORT 55555
+
+    int dhcp_s = socket(AF_INET, SOCK_STREAM, 0);
+    in_addr in;
+    int res = inet_aton("0.0.0.0", &in);
+    if (!res) {
+        return -2;
+    }
+
+    sockaddr_in sockaddr_ = {
+            .sin_family = AF_INET,
+            .sin_port = htons(DHCP_PORT),
+            .sin_addr = in
+    };
+
+    res = bind(dhcp_s, (sockaddr*) &sockaddr_, sizeof(sockaddr_));
+    if (res) {
+        std::cout << std::strerror(errno);
+        return -1;
+    }
+
+    listen(dhcp_s, 5);
+
+    sockaddr_in  peer_addr;
+
+    socklen_t peer_addr_size;
+
+    while(true)  {
+        std::cout<<"aaaaaa"<<std::endl;
+        int ss = accept(dhcp_s, (struct sockaddr *)  &peer_addr, &peer_addr_size);
+
+        std::string ip = inet_ntoa(peer_addr.sin_addr);
+
+        std::cout << "Recieved request from " << ip << std::endl;
+        std::string vip;
+        vip = addUser();
+        std::cout << "Generated VIP is: " << vip << std::endl;
+        std::cout << "Returning vip to the peer." << std::endl;
+        send(ss, (void *) vip.c_str(), vip.size(), 0);
+        close(ss);
+    }
 }
 
 void Router::work() {
@@ -52,105 +100,131 @@ void Router::work() {
      }*/
     std::cout<<"work"<<std::endl;
 
-    int listener;
-    struct sockaddr_in addr;
-    char buf[1024];
-    std::string vip;
+    char buffer[1024];
+    sockaddr_in local, remote;
+    unsigned short int port = 55555;
+    int sock_fd, optval = 1;
+    socklen_t remotelen;
+    unsigned long int tap2net = 0;
 
-    int bytes_read;
-
-    listener = socket(AF_INET, SOCK_STREAM, 0);
-    if (listener < 0) {
-        perror("socket");
+    if ( (sock_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        perror("socket()");
+        exit(1);
+    }
+    if(setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, (char *)&optval, sizeof(optval)) < 0) {
+        perror("setsockopt()");
         exit(1);
     }
 
-    fcntl(listener, F_SETFL, O_NONBLOCK);
+    fcntl(sock_fd, F_SETFL, O_NONBLOCK);
 
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
-    addr.sin_addr.s_addr = INADDR_ANY;
-    if (bind(listener, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
-        perror("bind");
-        exit(2);
+    memset(&local, 0, sizeof(local));
+    local.sin_family = AF_INET;
+    local.sin_addr.s_addr = htonl(INADDR_ANY);
+    local.sin_port = htons(port);
+
+    if (bind(sock_fd, (struct sockaddr*) &local, sizeof(local)) < 0) {
+        perror("bind()");
+        exit(1);
     }
-
-    listen(listener, 5);
-
+    std::cerr << "SERVER OPENED" << std::endl;
+    if (listen(sock_fd, 5) < 0) {
+        perror("listen()");
+        exit(1);
+    }
     std::set<int> clients;
     clients.clear();
+
+
+//
+//    std::thread th(&Router::foo, &routers[routers.size()-1);
+//    th.detach();
+
+//    std::thread th(&Router::foo, this);
+    std::thread th(&Router::foo, this);
+
+
     std::cout<<"проверка"<<std::endl;
-   /* std::vector<int> array2 = { 10000, 10001, 10002 };
+
+/*    std::vector<int> array2 = { 10000, 10001, 10002 };
     for (int i ; i<array2.size(); i++)
         if(port != array2[i])
             connect_router(array2[i]);*/
 
 
 
-    while (1) {
+    while (!shut) {
         // Заполняем множество сокетов
+        remotelen = sizeof(remote);
+        memset(&remote, 0, remotelen);
         fd_set readset;
+        uint16_t nread, nwrite, plength;
         FD_ZERO(&readset);
-        FD_SET(listener, &readset);
+        FD_SET(sock_fd, &readset);
+        for(auto it: clients) {
+            FD_SET(it, &readset);
+        }
 
-        for (std::set<int>::iterator it = clients.begin(); it != clients.end(); it++)
-            FD_SET(*it, &readset);
-
-        // Задаём таймаут
 
         std::cout<<"select"<<std::endl;
         // Ждём события в одном из сокетов
-        int mx = std::max(listener, *max_element(clients.begin(), clients.end()));
+        int mx;
+        if (clients.size() > 0) {
+            mx = std::max(sock_fd, *max_element(clients.begin(), clients.end()));
+        } else {
+            mx = sock_fd;
+        }
         if (select(mx + 1, &readset, NULL, NULL, NULL) <= 0) {
             perror("select");
             exit(3);
         }
-        std::cout<<"accept"<<std::endl;
 
         // Определяем тип события и выполняем соответствующие действия
-        if (FD_ISSET(listener, &readset)) {
+        if (FD_ISSET(sock_fd, &readset)) {
             // Поступил новый запрос на соединение, используем accept
-            int sock = accept(listener, NULL, NULL);
+            int net_fd = accept(sock_fd, NULL, NULL);
+            std::cerr << "SERVER: Client connected from " << inet_ntoa(remote.sin_addr) << std::endl;
+            this->vip_table.end()->second=net_fd;
+            fcntl(net_fd, F_SETFL, O_NONBLOCK);
 
-            vip = this->addUser(sock);
-            auto tmp = vip;
-            send(sock, tmp.c_str(), tmp.size(), 0);
-            if (sock < 0) {
-                perror("accept");
-                exit(3);
-            }
-
-            std::cout<<vip<<std::endl;
-
-            fcntl(sock, F_SETFL, O_NONBLOCK);
-
-            clients.insert(sock);
+            clients.insert(net_fd);
         }
         for(auto it: clients) {
             if(FD_ISSET(it, &readset)) {
                 char buff[1024];
                 recv(it,buff, sizeof(buff),0);
+                std::cout<<buff<<std::endl;
                 std::string destination = std::to_string((int(buff[0]) + 256) % 256) +
                                           "." + std::to_string((int(buff[1]) + 256) % 256) +
                                           "." + std::to_string((int(buff[2]) + 256) % 256) +
                                           "." + std::to_string((int(buff[3]) + 256) % 256);
-                send(vip_table[destination], buff, 1024, 0);
+                std::cout<<destination<<std::endl;
+                std::cout<<buff[4]<<std::endl;
+                send(vip_table[destination+"/32"], buff, 1024, 0);
 
             }
         }
 
-
+    usleep(500);
     }
+    close(sock_fd);
+    th.join();
+
+    for(auto it: clients) {
+        close(it);
+    }
+
 }
 std::string Router::generateVip() {
     std::cout << "Делаю айпи" << std::endl;
-    return ip_area + std::to_string(ip_part++) + "/32";
+    return ip_area + std::to_string(ip_part++);
 }
 
-std::string Router::addUser(const int sd) {
+std::string Router::addUser() {
     std::cout << "Добавляю пользователя"  << std::endl;
     std::string vip = generateVip();
-    this->vip_table[vip] = sd;
+    this->vip_table[vip+"/32"] = 1233;
+    vip = vip + "/24";
     return vip;
 }
 
@@ -230,7 +304,7 @@ int Router::compareIp(std::string aip, std::string bip) {
 
 
 int Router::connect_router (int port) {
-    const char *SERVER_ADDR = "192.168.0.43";  // ip server
+    const char *SERVER_ADDR = "172.16.87.16";  // ip server
 
     int s = socket(AF_INET, SOCK_STREAM, 0);
     in_addr in;
