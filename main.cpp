@@ -19,7 +19,7 @@
 
 const int BUFF_SIZE = 4 * 1024;
 
-const char *SERVER_ADDR = "172.16.87.16";  // mb std::string
+const char *SERVER_ADDR = "192.168.1.75";  // mb std::string
 const int SERVER_PORT = 10000;
 const char *tun_name = "vpn_tun";
 int sock_fd;
